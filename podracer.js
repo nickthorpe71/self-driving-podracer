@@ -3,7 +3,12 @@ const createPodracer = (x, y, width, height) => {
         x,
         y,
         width,
-        height
+        height,
+
+        speed: 0,
+        acceleration: 0.2,
+        maxSpeed: 3,
+        friction: 0.05,
     }
 
     const draw = (ctx) => {
@@ -18,12 +23,24 @@ const createPodracer = (x, y, width, height) => {
     }
 
     const update = () => {
-        if (podracer.controls.forward) {
-            podracer.y -= 2;
-        }
-        if (podracer.controls.reverse) {
-            podracer.y += 2;
-        }
+        if (podracer.controls.forward)
+            podracer.speed += podracer.acceleration;
+        if (podracer.controls.reverse)
+            podracer.speed -= podracer.acceleration;
+
+        // cap speed
+        if (podracer.speed > podracer.maxSpeed)
+            podracer.speed = podracer.maxSpeed;
+        if (podracer.speed < -podracer.maxSpeed / 2)
+            podracer.speed = -podracer.maxSpeed / 2;
+
+        // apply friction
+        if (podracer.speed > 0)
+            podracer.speed -= podracer.friction;
+        if (podracer.speed < 0)
+            podracer.speed += podracer.friction;
+
+        podracer.y -= podracer.speed;
     }
 
     podracer.draw = draw;
