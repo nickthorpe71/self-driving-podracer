@@ -18,6 +18,7 @@ const createPodracer = (x, y, width, height) => {
     }
 
     podracer.draw = draw;
+    podracer.controls = createControls();
 
     return podracer;
 }
