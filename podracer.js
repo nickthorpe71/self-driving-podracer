@@ -39,6 +39,8 @@ const createPodracer = (x, y, width, height) => {
             podracer.speed -= podracer.friction;
         if (podracer.speed < 0)
             podracer.speed += podracer.friction;
+        if (Math.abs(podracer.speed) < podracer.friction)
+            podracer.speed = 0;
 
         podracer.y -= podracer.speed;
     }
