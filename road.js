@@ -17,15 +17,18 @@ const createRoad = (x, width, laneCount = 3) => {
         ctx.lineWidth = 5;
         ctx.strokeStyle = "#cac5ba";
 
-        ctx.beginPath();
-        ctx.moveTo(road.left, road.top);
-        ctx.lineTo(road.left, road.bottom);
-        ctx.stroke();
+        for (let i = 0; i <= road.laneCount; i++) {
+            const x = lerp(
+                road.left,
+                road.right,
+                i / road.laneCount
+            );
 
-        ctx.beginPath();
-        ctx.moveTo(road.right, road.top);
-        ctx.lineTo(road.right, road.bottom);
-        ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, road.top);
+            ctx.lineTo(x, road.bottom);
+            ctx.stroke();
+        }
     }
 
     road.draw = draw;
