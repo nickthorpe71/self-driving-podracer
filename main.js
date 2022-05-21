@@ -5,13 +5,13 @@ const ctx = canvas.getContext("2d");
 const road = new Road(canvas.width / 2, canvas.width * 0.95);
 const pod = new Pod(road.getLaneCenter(1), 100, 30, 50, "KEYS");
 const traffic = [
-    new Pod(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 9)
+    new Pod(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 11.5)
 ];
 
 animate();
 
 function animate() {
-    traffic.forEach(pod => pod.update(road.borders));
+    traffic.forEach(pod => pod.update(road.borders, []));
 
     pod.update(road.borders, traffic);
 
@@ -21,8 +21,8 @@ function animate() {
     ctx.translate(0, -pod.y + canvas.height * 0.7);
 
     road.draw(ctx);
-    traffic.forEach(pod => pod.draw(ctx));
-    pod.draw(ctx);
+    traffic.forEach(pod => pod.draw(ctx, "#5c5c5c"));
+    pod.draw(ctx, "#78c1e2");
 
     ctx.restore();
     requestAnimationFrame(animate);

@@ -1,5 +1,5 @@
 class Pod {
-    constructor(x, y, width, height, controlType, maxSpeed = 10) {
+    constructor(x, y, width, height, controlType, maxSpeed = 12) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -17,23 +17,23 @@ class Pod {
         this.controls = new Controls(controlType);
     }
 
-    update(roadBorders) {
+    update(roadBorders, traffic) {
         if (!this.damaged) {
             this.#move();
             this.polygon = this.#createPolygon();
-            this.damaged = this.#assessDamage(roadBorders);
+            this.damaged = this.#assessDamage(roadBorders, traffic);
         }
         if (this.sensor)
-            this.sensor.update(roadBorders);
+            this.sensor.update(roadBorders, traffic);
     }
 
-    #assessDamage(roadBorders) {
-        for (let i = 0; i < roadBorders.length; i++) {
-            if (polysIntersect(this.polygon, roadBorders[i])) {
-                return true;
-            }
-        }
-        return false;
+    #assessDamage(roadBorders, traffic) {
+        const hitRoadBorder = roadBorders.reduce(
+            (acc, border) => acc === true || polysIntersect(this.polygon, border), false);
+
+        const hitOtherVehicle = traffic.reduce(
+            (acc, pod) => acc === true || polysIntersect(this.polygon, pod.polygon), false);
+        return hitRoadBorder || hitOtherVehicle;
     }
 
     #createPolygon() {
@@ -98,11 +98,11 @@ class Pod {
         this.y -= Math.cos(this.angle) * this.speed;
     }
 
-    draw(ctx) {
+    draw(ctx, color) {
         if (this.damaged) {
-            ctx.fillStyle = "gray";
+            ctx.fillStyle = "red";
         } else {
-            ctx.fillStyle = "black";
+            ctx.fillStyle = color;
         }
         ctx.beginPath();
         ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
