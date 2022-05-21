@@ -8,6 +8,7 @@ const createPodracer = (x, y, width, height) => {
         speed: 0,
         acceleration: 0.2,
         maxSpeed: 3,
+        turnSpeed: 0.015,
         friction: 0.05,
         angle: 0,
     }
@@ -59,9 +60,9 @@ const createPodracer = (x, y, width, height) => {
             const flip = podracer.speed > 0 ? 1 : -1;
 
             if (podracer.controls.left)
-                podracer.angle += 0.03 * flip;
+                podracer.angle += podracer.turnSpeed * flip;
             if (podracer.controls.right)
-                podracer.angle -= 0.03 * flip;
+                podracer.angle -= podracer.turnSpeed * flip;
         }
 
         podracer.x -= Math.sin(podracer.angle) * podracer.speed;
