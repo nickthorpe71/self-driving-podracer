@@ -30,6 +30,10 @@ const createPodracer = (x, y, width, height) => {
     }
 
     const update = () => {
+        move();
+    }
+
+    const move = () => {
         // forward/reverse
         if (podracer.controls.forward)
             podracer.speed += podracer.acceleration;
@@ -59,7 +63,6 @@ const createPodracer = (x, y, width, height) => {
             if (podracer.controls.right)
                 podracer.angle -= 0.03 * flip;
         }
-
 
         podracer.x -= Math.sin(podracer.angle) * podracer.speed;
         podracer.y -= Math.cos(podracer.angle) * podracer.speed;
