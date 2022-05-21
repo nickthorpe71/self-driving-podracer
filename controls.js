@@ -1,44 +1,45 @@
-const createControls = () => {
-    const controls = {
-        forward: false,
-        right: false,
-        reverse: false,
-        left: false
+class Controls {
+    constructor() {
+        this.forward = false;
+        this.left = false;
+        this.right = false;
+        this.reverse = false;
+
+        this.#addKeyboardListeners();
     }
 
-    document.onkeydown = (event) => {
-        switch (event.key) {
-            case "ArrowUp":
-                controls.forward = true;
-                break;
-            case "ArrowRight":
-                controls.right = true;
-                break;
-            case "ArrowDown":
-                controls.reverse = true;
-                break;
-            case "ArrowLeft":
-                controls.left = true;
-                break;
+    #addKeyboardListeners() {
+        document.onkeydown = (event) => {
+            switch (event.key) {
+                case "ArrowLeft":
+                    this.left = true;
+                    break;
+                case "ArrowRight":
+                    this.right = true;
+                    break;
+                case "ArrowUp":
+                    this.forward = true;
+                    break;
+                case "ArrowDown":
+                    this.reverse = true;
+                    break;
+            }
+        }
+        document.onkeyup = (event) => {
+            switch (event.key) {
+                case "ArrowLeft":
+                    this.left = false;
+                    break;
+                case "ArrowRight":
+                    this.right = false;
+                    break;
+                case "ArrowUp":
+                    this.forward = false;
+                    break;
+                case "ArrowDown":
+                    this.reverse = false;
+                    break;
+            }
         }
     }
-
-    document.onkeyup = (event) => {
-        switch (event.key) {
-            case "ArrowUp":
-                controls.forward = false;
-                break;
-            case "ArrowRight":
-                controls.right = false;
-                break;
-            case "ArrowDown":
-                controls.reverse = false;
-                break;
-            case "ArrowLeft":
-                controls.left = false;
-                break;
-        }
-    }
-
-    return controls;
 }
