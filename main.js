@@ -1,6 +1,17 @@
 const mainCanvas = document.getElementById("mainCanvas");
 mainCanvas.width = 400;
 
+// TO ADD
+// Randomized road
+// use old cars as traffic
+
+// initialization
+// fitness
+// selection
+// crossover
+// mutation
+
+
 const networkCanvas = document.getElementById("networkCanvas");
 networkCanvas.width = 600;
 
@@ -9,14 +20,25 @@ const networkCtx = networkCanvas.getContext("2d");
 
 const road = new Road(mainCanvas.width / 2, mainCanvas.width * 0.95);
 
-const pods = generatePods(500);
+const pods = generatePods(1);
 let bestPod = pods[0];
 if (localStorage.getItem("bestBrain")) {
-    bestPod.brain = JSON.parse(localStorage.getItem("bestBrain"));
+    for (let i = 0; i < pods.length; i++) {
+        pods[i].brain = JSON.parse(localStorage.getItem("bestBrain"));
+        if (i != 0) {
+            NeuralNetwork.mutate(pods[i].brain, 0.2);
+        }
+    }
 }
 
 const traffic = [
-    new Pod(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 11.5)
+    new Pod(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 11.5),
+    new Pod(road.getLaneCenter(0), -300, 30, 50, "DUMMY", 11.5),
+    new Pod(road.getLaneCenter(2), -300, 30, 50, "DUMMY", 11.5),
+    new Pod(road.getLaneCenter(3), -500, 30, 50, "DUMMY", 11.5),
+    new Pod(road.getLaneCenter(5), -500, 30, 50, "DUMMY", 11.5),
+    new Pod(road.getLaneCenter(4), -700, 30, 50, "DUMMY", 11.5),
+    new Pod(road.getLaneCenter(0), -700, 30, 50, "DUMMY", 11.5),
 ];
 
 animate();
@@ -43,6 +65,7 @@ function animate(time) {
     traffic.forEach(pod => pod.update(road.borders, []));
     pods.forEach(pod => pod.update(road.borders, traffic));
 
+    // fitness function
     bestPod = pods.find(
         pod => pod.y == Math.min(...pods.map(pod => pod.y))
     );
