@@ -8,3 +8,7 @@ body {
 #mainCanvas {
     background: #b6a78b;
 }
+
+#networkCanvas {
+    background: black;
+}

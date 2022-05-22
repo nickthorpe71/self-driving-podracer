@@ -6,7 +6,7 @@ class Pod {
         this.height = height;
 
         this.speed = 0;
-        this.acceleration = 0.5;
+        this.acceleration = 0.2;
         this.maxSpeed = maxSpeed;
         this.friction = 0.05;
         this.angle = 0;
@@ -16,11 +16,6 @@ class Pod {
 
         if (controlType != "DUMMY") {
             this.sensor = new Sensor(this);
-
-            // this neural network has 3 layers
-            // layer 1 are the inputs (rays from sensor)
-            // layer 2 is the hidden layer (6 neurons)
-            // layer 3 is the output layer (4 for the arrow key directions)
             this.brain = new NeuralNetwork(
                 [this.sensor.rayCount, 6, 4]
             );
@@ -39,7 +34,6 @@ class Pod {
             const offsets = this.sensor.readings.map(
                 s => s == null ? 0 : 1 - s.offset
             );
-
             const outputs = NeuralNetwork.feedForward(offsets, this.brain);
 
             if (this.useBrain) {
@@ -52,12 +46,17 @@ class Pod {
     }
 
     #assessDamage(roadBorders, traffic) {
-        const hitRoadBorder = roadBorders.reduce(
-            (acc, border) => acc === true || polysIntersect(this.polygon, border), false);
-
-        const hitOtherVehicle = traffic.reduce(
-            (acc, pod) => acc === true || polysIntersect(this.polygon, pod.polygon), false);
-        return hitRoadBorder || hitOtherVehicle;
+        for (let i = 0; i < roadBorders.length; i++) {
+            if (polysIntersect(this.polygon, roadBorders[i])) {
+                return true;
+            }
+        }
+        for (let i = 0; i < traffic.length; i++) {
+            if (polysIntersect(this.polygon, traffic[i].polygon)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     #createPolygon() {
@@ -135,7 +134,8 @@ class Pod {
         }
         ctx.fill();
 
-        if (this.sensor)
+        if (this.sensor) {
             this.sensor.draw(ctx);
+        }
     }
 }

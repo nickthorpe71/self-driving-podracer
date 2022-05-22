@@ -1,29 +1,47 @@
-const canvas = document.getElementById("mainCanvas");
-canvas.width = 400;
+const mainCanvas = document.getElementById("mainCanvas");
+mainCanvas.width = 400;
 
-const ctx = canvas.getContext("2d");
-const road = new Road(canvas.width / 2, canvas.width * 0.95);
-const pod = new Pod(road.getLaneCenter(1), 100, 30, 50, "AI");
+const networkCanvas = document.getElementById("networkCanvas");
+networkCanvas.width = 600;
+
+const mainCtx = mainCanvas.getContext("2d");
+const networkCtx = networkCanvas.getContext("2d");
+
+
+const road = new Road(mainCanvas.width / 2, mainCanvas.width * 0.95);
+const pod = generatePods(100);
 const traffic = [
     new Pod(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 11.5)
 ];
 
 animate();
 
-function animate() {
+function generatePods(N) {
+    const pods = [];
+    for (let i = 1; i <= N; i++) {
+        pods.push(new Pod(road.getLaneCenter(1), 100, 30, 50, "AI"));
+    }
+    return pods;
+}
+
+function animate(time) {
     traffic.forEach(pod => pod.update(road.borders, []));
 
     pod.update(road.borders, traffic);
 
-    canvas.height = window.innerHeight;
+    mainCanvas.height = window.innerHeight;
+    networkCanvas.height = window.innerHeight;
 
-    ctx.save();
-    ctx.translate(0, -pod.y + canvas.height * 0.7);
+    mainCtx.save();
+    mainCtx.translate(0, -pod.y + mainCanvas.height * 0.7);
 
-    road.draw(ctx);
-    traffic.forEach(pod => pod.draw(ctx, "#5c5c5c"));
-    pod.draw(ctx, "#78c1e2");
+    road.draw(mainCtx);
+    traffic.forEach(pod => pod.draw(mainCtx, "#5c5c5c"));
+    pod.draw(mainCtx, "#78c1e2");
 
-    ctx.restore();
+    mainCtx.restore();
+
+    networkCtx.lineDashOffset = -time / 50;
+    Visualizer.drawNetwork(networkCtx, pod.brain);
     requestAnimationFrame(animate);
 }
