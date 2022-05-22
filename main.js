@@ -3,7 +3,7 @@ canvas.width = 400;
 
 const ctx = canvas.getContext("2d");
 const road = new Road(canvas.width / 2, canvas.width * 0.95);
-const pod = new Pod(road.getLaneCenter(1), 100, 30, 50, "KEYS");
+const pod = new Pod(road.getLaneCenter(1), 100, 30, 50, "AI");
 const traffic = [
     new Pod(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 11.5)
 ];
